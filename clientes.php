@@ -44,7 +44,7 @@
 								<div class="form-group">
 									<label class="control-label col-md-1">UF</label>
 									<div class="col-md-12">
-										<select class="form-control" ng-model="cliente.endereco.uf" style="width:20%">
+										<select class="form-control" ng-model="cliente.uf" style="width:20%">
 											<option>DF</option>
 											<option>GO</option>
 										</select>
@@ -54,21 +54,21 @@
 								<div class="form-group">
 									<label for="cidade" class="control-label col-md-2">Cidade</label>
 									<div class="col-md-12">
-										<input id="cidade" class="form-control" type="text" name="cidade" placeholder="Cidade do cliente" ng-model="cliente.endereco.cidade">
+										<input id="cidade" class="form-control" type="text" name="cidade" placeholder="Cidade do cliente" ng-model="cliente.cidade">
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label for="bairro" class="control-label col-md-2">Bairro</label>
 									<div class="col-md-12">
-										<input id="bairro" class="form-control" type="text" name="bairro" placeholder="Bairro do cliente" ng-model="cliente.endereco.bairro">
+										<input id="bairro" class="form-control" type="text" name="bairro" placeholder="Bairro do cliente" ng-model="cliente.bairro">
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label for="logradouro" class="control-label col-md-2">Logradouro</label>
 									<div class="col-md-12">
-										<input id="logradouro" class="form-control" type="text" name="logradouro" placeholder="Logradouro do cliente" ng-model="cliente.endereco.logradouro">
+										<input id="logradouro" class="form-control" type="text" name="logradouro" placeholder="Logradouro do cliente" ng-model="cliente.logradouro">
 									</div>
 								</div>
 							</header>
@@ -81,21 +81,21 @@
 							<div class="form-group">
 								<label for="telefone" class="control-label col-md-2">Telefone</label>
 								<div class="col-md-12">
-									<input id="telefone" class="form-control" type="text" name="telefone" placeholder="Telefone do cliente" ng-model="cliente.contato.telefone">
+									<input id="telefone" class="form-control" type="text" name="telefone" placeholder="Telefone do cliente" ng-model="cliente.telefone">
 								</div>
 							</div>
 
 							<div class="form-group">
 								<label for="celular" class="control-label col-md-2">Celular</label>
 								<div class="col-md-12">
-									<input id="celular" class="form-control" type="text" name="celular" placeholder="Celular do cliente" ng-model="cliente.contato.celular">
+									<input id="celular" class="form-control" type="text" name="celular" placeholder="Celular do cliente" ng-model="cliente.celular">
 								</div>
 							</div>
 
 							<div class="form-group">
 								<label for="email" class="control-label col-md-2">E-mail</label>
 								<div class="col-md-12">
-									<input id="email" class="form-control" type="text" name="email" placeholder="E-mail do cliente" ng-model="cliente.contato.email">
+									<input id="email" class="form-control" type="text" name="email" placeholder="E-mail do cliente" ng-model="cliente.email">
 								</div>
 							</div>
 							
@@ -128,8 +128,8 @@
 				<tr ng-repeat="cliente in clientes  | filter : nameFilter">
 					<td>{{cliente.cnpj | uppercase}}</td>
 					<td>{{cliente.nome | uppercase}}</td>
-					<td>{{cliente.endereco.bairro | uppercase}}</td>
-					<td>{{cliente.endereco.logradouro | uppercase}}</td>
+					<td>{{cliente.bairro | uppercase}}</td>
+					<td>{{cliente.logradouro | uppercase}}</td>
 					<td style="width:20%;text-align:center">
 						<button type="button" class="btn btn-info" ng-click="alterar(cliente)">Alterar</button>
 						<button type="button" class="btn btn-danger" ng-click="remover(cliente)">Deletar</button>

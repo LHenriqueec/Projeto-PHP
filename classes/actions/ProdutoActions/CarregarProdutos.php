@@ -7,5 +7,5 @@
 	$stmt->execute();
 	$result = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-	echo '{ "produtos":' . json_encode($result) . "}";
+	echo '{ "produtos":' . json_encode($result) . '}';
  ?>

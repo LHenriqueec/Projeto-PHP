@@ -3,7 +3,7 @@ angular.module('produtoApp', []).controller('produtoController', function($scope
 	$scope.isEdit = false;
 	$scope.produtoSelec = {};
 
-	$http.get('classes/actions/ProdutoActions/CarregarProdutos.php')
+	$http.post('classes/actions/ProdutoActions/CarregarProdutos.php')
 	.then(function(response) {
 		$scope.produtos = response.data.produtos;
 	});
