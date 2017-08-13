@@ -1,8 +1,5 @@
 angular.module('clienteApp', []).controller('clienteController', function($scope, $http) {
 	
-	$scope.cliente = {};
-	
-
 	$scope.valuesUF = ["Emil", "Tobias", "Linus"];
 
 	var isEdit = false;
@@ -11,6 +8,11 @@ angular.module('clienteApp', []).controller('clienteController', function($scope
 		.then(function(response) {
 			$scope.clientes = response.data.clientes;
 		});
+
+	$scope.novo = function() {
+		$scope.cliente = {};
+		isEdit = false;
+	}
 
 	$scope.salvar = function() {
 		var json = angular.toJson($scope.cliente);
