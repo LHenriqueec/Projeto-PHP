@@ -19,7 +19,7 @@ app.config(function($routeProvider) {
 
 app.controller("produtoController", function($scope, $http) {
 	$scope.isEdit = false;
-	$scope.produtoSelec = {};
+	$scope.produto = {};
 
 	$http.post('classes/actions/ProdutoActions/CarregarProdutos.php')
 	.then(function(response) {
@@ -28,32 +28,34 @@ app.controller("produtoController", function($scope, $http) {
 
 	$scope.editar = function(produto) {
 		console.log(produto.nome);
-		$scope.produtoSelec = produto;
+		$scope.produto = produto;
 		$scope.isEdit = true;
 	};	
 
 	$scope.salvar = function() {
+		var json = angular.toJson($scope.produto);
+
 		if($scope.isEdit) {
-			$http.post("classes/actions/ProdutoActions/AlterarProduto.php", {"codigo":$scope.produtoSelec.codigo, "nome":$scope.produtoSelec.nome})
+			$http.post("classes/actions/ProdutoActions/AlterarProduto.php", json)
 				.then(function(response) {
 					console.info(response.data);
 				});
 		} else {
-			$http.post("classes/actions/ProdutoActions/SalvarProduto.php", {"codigo":$scope.produtoSelec.codigo, "nome":$scope.produtoSelec.nome})
+			$http.post("classes/actions/ProdutoActions/SalvarProduto.php", json)
 				.then(function(response) {
 					console.info(response.data);
 				});
-			$scope.produtos.push($scope.produtoSelec);
+			$scope.produtos.push($scope.produto);
 		}
 
 		$scope.isEdit = false;
-		$scope.produtoSelec = {};
+		$scope.produto = {};
 	};
 
 	$scope.remover = function(produto) {
 		$scope.produtos.splice($scope.produtos.indexOf(produto), 1);
 		$scope.isEdit = false;
-		$scope.produtoSelec = {};
+		$scope.produto = {};
 
 		$http.post('classes/actions/ProdutoActions/DeletarProduto.php', {"codigo":produto.codigo})
 			.then(function(response) {
