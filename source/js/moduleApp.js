@@ -3,7 +3,8 @@ var app = angular.module("menuApp", ["ngRoute"]);
 app.config(function($routeProvider) {
 	$routeProvider
 		.when("/", {
-			templateUrl : "views/main.html"
+			templateUrl : "views/main.html",
+			controller : "mainController"
 		})
 		.when("/clientes", {
 			templateUrl : "views/clientes.html",
@@ -15,15 +16,33 @@ app.config(function($routeProvider) {
 		});
 });
 
+<!-- Main controller -->
+app.controller("mainController", function($scope, $http) {
+	$scope.produtos = [
+				{codigo: 10, nome: "picole", quantidade: 500},
+				{codigo: 12, nome: "cup", quantidade: 500},
+				{codigo: 123, nome: 'pote', quantidade: 120}
+				];
+	$scope.total = 0;
+
+	for (var i = $scope.produtos.length - 1; i >= 0; i--) {
+		var produto = $scope.produtos[i];
+		$scope.total += produto.quantidade;
+
+	}
+
+	
+});
+
 <!-- Produto controller -->
 
 app.controller("produtoController", function($scope, $http) {
 	$scope.isEdit = false;
 	$scope.produto = {};
 
-	$http.post('classes/actions/ProdutoActions/CarregarProdutos.php')
+	$http.post('classes/CarregarProdutos.php')
 	.then(function(response) {
-		$scope.produtos = response.data.produtos;
+		$scope.produtos = response.data;
 	});
 
 	$scope.editar = function(produto) {
@@ -36,12 +55,12 @@ app.controller("produtoController", function($scope, $http) {
 		var json = angular.toJson($scope.produto);
 
 		if($scope.isEdit) {
-			$http.post("classes/actions/ProdutoActions/AlterarProduto.php", json)
+			$http.post("classes/AlterarProduto.php", json)
 				.then(function(response) {
 					console.info(response.data);
 				});
 		} else {
-			$http.post("classes/actions/ProdutoActions/SalvarProduto.php", json)
+			$http.post("classes/SalvarProduto.php", json)
 				.then(function(response) {
 					console.info(response.data);
 				});
@@ -57,7 +76,7 @@ app.controller("produtoController", function($scope, $http) {
 		$scope.isEdit = false;
 		$scope.produto = {};
 
-		$http.post('classes/actions/ProdutoActions/DeletarProduto.php', {"codigo":produto.codigo})
+		$http.post('classes/DeletarProduto.php', {"codigo":produto.codigo})
 			.then(function(response) {
 				console.info(response.data);
 		});
@@ -70,7 +89,7 @@ app.controller("clienteCotnroller", function($scope, $http) {
 
 	var isEdit = false;
 
-	$http.post('classes/actions/ClienteActions/CarregarClientes.php')
+	$http.post('classes/CarregarClientes.php')
 		.then(function(response) {
 			$scope.clientes = response.data.clientes;
 		});
@@ -84,10 +103,10 @@ app.controller("clienteCotnroller", function($scope, $http) {
 		var json = angular.toJson($scope.cliente);
 		
 		if(isEdit) {
-			$http.post('classes/actions/ClienteActions/AlterarCliente.php', json);
+			$http.post('classes/AlterarCliente.php', json);
 			console.info(json);
 		} else {
-			$http.post('classes/actions/ClienteActions/SalvarCliente.php', json)
+			$http.post('classes/SalvarCliente.php', json)
 				.then(function(response) {
 					console.info(response.data);
 				});
@@ -104,7 +123,7 @@ app.controller("clienteCotnroller", function($scope, $http) {
 	};
 
 	$scope.remover = function(cliente) {
-		$http.post('classes/actions/ClienteActions/DeletarCliente.php', {"cnpj":cliente.cnpj});
+		$http.post('classes/DeletarCliente.php', {"cnpj":cliente.cnpj});
 		$scope.clientes.splice($scope.clientes.indexOf(cliente), 1);
 		$scope.cliente = {};
 		isEdit = false;

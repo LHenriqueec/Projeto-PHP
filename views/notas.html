@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="source/css/main.css">
+	<title>Principal</title>
+</head>
+<body>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+	<script type="text/javascript">
+		angular.module("app", []).controller("controller", function($scope, $http) {
+			$scope.isNew = false;
+			$scope.nota = undefined;
+			$scope.notas = [];
+			$scope.data = new Date();
+
+			$scope.novo = function() {
+				$scope.isNew = true;
+				
+				$scope.clientes = [
+					{nome:"g18 exame mega taguatinga", bairro:"taguatinga", endereco:"sgas 10 rua 12 conj d"},
+					{nome:"o30 exame sede", bairro:"asa sul", endereco:"shis sul qd 25"}
+				];
+			};
+
+			$scope.cancelar = function() {
+				$scope.isNew = false;
+			};
+
+			$scope.confirmar = function() {
+				console.info('Confirmar');
+			};
+
+			$scope.salvar = function() {
+				$scope.notas.push($scope.nota);
+				$scope.nota = {};
+			};
+			
+			$scope.alterar = function() {
+
+			};
+
+			$scope.deletar = function(nota) {
+				$scope.notas.splice($scope.notas.indexOf(nota), 1);
+			};
+
+			$scope.show = function() {
+				return $scope.notas.length == 0;
+			};
+
+		});
+	</script>
+
+
+	<div ng-app="app" ng-controller="controller">
+		
+		
+
+		
+
+		<div style="padding:10px" ng-show="!isNew">
+			<div class="col-md-2">
+				<input type="text" class="form-control" placeholder="Pesquisar nota" ng-model="notaFilter">
+			</div>
+
+			<button class="btn btn-primary" data-toggle="modal" data-target="#model-nota" ng-click="novo()">Novo</button>
+
+			<table class="table table-hover">
+				<thead>
+					<th width="10%" style="text-align:center">Nota</th>
+					<th style="text-align:left">Cliente</th>
+					<th width="10%" style="text-align:center">Data</th>
+					<th width="15%" style="text-align:center"></th>
+				</thead>
+				<tbody>
+					<tr ng-repeat="nota in notas | filter: notaFilter" ng-show="notas">
+						<td style="text-align:center">{{nota.nota}}</td>
+						<td>{{nota.cliente | uppercase}}</td>
+						<td style="text-align:center">{{nota.data}}</td>
+						<td>
+							<a href="#" class="link">Alterar</a>
+							<a href="#" class="link" ng-click="deletar(nota)">Excluir</a>
+						</td>
+					</tr>
+					<tr ng-show="show()">
+						<th colspan="4" style="text-align:center">Não há notas registradas</th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div ng-show="isNew">
+			<div class="panel panel-default">
+				<div class="panel-body">
+
+				</div>
+
+				<div class="panel-footer" style="text-align:right">
+					<button class="btn btn-default" ng-click="cancelar()">Cancelar</button>
+					<button class="btn btn-primary" ng-click="salvar()">Salvar</button>
+				</div>
+			</div>
+		</div>
+
+		<div id="model-nota" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="model-nota">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+						<h4 class="modal-title">Lançamento Notas</h4>
+					</div>
+
+					<div class="modal-body">
+						<form>
+							<div class="row">
+								
+								<div class="form-group col-md-9">
+									<label class="col-md-12">Nº</label>
+									<div class="col-md-5">
+										<input type="text" class="form-control col-md-12" placeholder="Numero da Nota">
+									</div>
+								</div>
+								
+								<div class="form-group col-md-3" style="text-align:right">
+									<label>Data:</label>
+									<label>{{data | date : "dd/MM/y"}}</label>
+								</div>
+							</div>
+						</form>
+
+						<div class="form-group col-md-5">
+							<input class="form-control" ng-model="clienteFilter" placeholder="Pesquisar cliente"></input>
+						</div>
+						<table class="table table-hover">
+							<thead>
+								<th>Cliente</th>
+								<th>Bairro</th>
+								<th>Endereço</th>
+								<th></th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="cliente in clientes | filter : clienteFilter">
+									<td>{{cliente.nome | uppercase}}</td>
+									<td>{{cliente.bairro | uppercase}}</td>
+									<td>{{cliente.endereco | uppercase}}</td>
+									<td>
+										<button class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="modal-footer">
+					    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelar()">Cancelar</button>
+					    <button type="button" class="btn btn-primary" ng-click="confirmar()">Confirmar</button>
+	     			</div>
+				</div>
+			</div>
+		</div>
+
+	</div>	
+
+</body>
+</html

@@ -1,0 +1,21 @@
+.panel {
+	margin: 10px;
+}
+
+.table {
+	margin-bottom: 0px;
+}
+
+div#panel-table-recibos thead {
+	background-color: #666;
+	color: #fff;
+}
+
+.panel-head-main .panel {
+	margin:0px;
+}
+
+.panel-head-main .col-md-6 {
+	margin:0px;
+	padding: 10px
+}
