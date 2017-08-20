@@ -4,14 +4,25 @@
 
 	class ProdutoDAO {
 
+		public static function alterar($produto) {
+			$sql = 'update produto set nome=:nome where codigo=:codigo';
+			$conn = ConnectionUtil::connection();
+			$stmt = $conn->prepare($sql);
+			$stmt->execute(array(
+					'codigo'=> $produto->codigo,
+					'nome'=> $produto->nome
+				));
+
+		}
+
 		public static function salvar($produto) {
 			$sql = 'insert into produto set codigo = :codigo, nome = :nome';
 			$conn = ConnectionUtil::connection();
 
 			$stmt = $conn->prepare($sql);
 			$stmt->execute(array(
-					'codigo' => $produto->getCodigo(),
-					'nome' => $produto->getNome()
+					'codigo' => $produto->codigo,
+					'nome' => $produto->nome
 				));
 		}
 
@@ -26,6 +37,13 @@
 
 				return $result;
 			}
+		}
+
+		public static function deletar($codigo) {
+			$sql = 'delete from produto where codigo=:codigo';
+			$conn = ConnectionUtil::connection();
+			$stmt = $conn->prepare($sql);
+			$stmt->execute(array('codigo' => $codigo));
 		}
 	}
  ?>

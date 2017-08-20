@@ -5,7 +5,7 @@
 	header("Content-Type: application/json, charset=utf8");
 	
 	
-	$result = ProdutoDAO::carregar();
+	$result = ClienteDAO::carregar();
 	echo json_encode($result);
 
  ?>

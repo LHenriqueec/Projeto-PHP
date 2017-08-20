@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="source/css/main.css">
+	<link rel="stylesheet" type="text/css" href="../source/css/main.css">
 	<title>Principal</title>
 </head>
 <body>
@@ -17,11 +17,12 @@
 			$scope.isNew = false;
 			$scope.nota = undefined;
 			$scope.notas = [];
-			$scope.data = new Date();
+			
 
 			$scope.novo = function() {
 				$scope.isNew = true;
-				
+				$scope.nota = {};
+				$scope.nota.data = new Date();
 				$scope.clientes = [
 					{nome:"g18 exame mega taguatinga", bairro:"taguatinga", endereco:"sgas 10 rua 12 conj d"},
 					{nome:"o30 exame sede", bairro:"asa sul", endereco:"shis sul qd 25"}
@@ -33,7 +34,8 @@
 			};
 
 			$scope.confirmar = function() {
-				console.info('Confirmar');
+				console.info($scope.nota);
+				$notas.push(nota);
 			};
 
 			$scope.salvar = function() {
@@ -48,6 +50,11 @@
 			$scope.deletar = function(nota) {
 				$scope.notas.splice($scope.notas.indexOf(nota), 1);
 			};
+
+			$scope.selecionarCliente = function(cliente) {
+				$scope.nota.cliente = cliente;
+				console.info($scope.nota.cliente);
+			}
 
 			$scope.show = function() {
 				return $scope.notas.length == 0;
@@ -97,7 +104,80 @@
 		<div ng-show="isNew">
 			<div class="panel panel-default">
 				<div class="panel-body">
+				<!-- TODO: content da inserção de produto da nota -->
+				<div class="row" style="margin:5px;">
+		
+					<div class="panel panel-default col-md-12" style="margin:0px 0px 15px 0px;padding-top:10px;text-align:center">
+						<div class="panel-body">
+							
+							<div class="col-md-3">
 
+								<div class="form-group">
+									<label>Nº da Nota:</label> 16175 
+								</div>
+								
+								<div class="form-group">
+									<label>Data:</label> 20/08/2017
+								</div>
+								
+							</div>
+							<div class="col-md-5">
+							
+								<div class="form-group">
+									<label>Cliente:</label> O30 EXAME SEDE
+								</div>
+								
+								<div class="form-group">
+									<label>Endereço:</label> SETOR DE CLUBES SUL 117
+								</div>
+
+							</div>
+							<div class="col-md-4">
+							
+								<div class="form-group">
+									<label>UF:</label> DF
+									<label>Cidade:</label> BRASÍLIA
+								</div>
+								
+								
+								
+								<div class="form-group">
+									<label>Bairro:</label> ASA SUL
+								</div>
+
+							</div>
+						</div>
+					</div>
+					
+					<div class="panel panel-default col-md-12" style="margin:0px;padding-top: 10px">
+						<div class="panel-body">
+
+							<div class="col-md-8 form-inline">
+								<div class="form-group">
+									<label for="produto">Produto</label>
+									<input id="produto" class="form-control" placeholder="Produto">
+									<label for="produto">Quantidade</label>
+									<input id="produto" class="form-control" placeholder="Quantidade">
+								</div>
+
+								<button class="btn btn-primary btn-sm">Inserir</button>
+							</div>
+							
+							<div>
+								<table class="table table-hover">
+									<thead>
+										<th>Código</th>
+										<th width="80%">Produto</th>
+										<th>Quantidade</th>
+										<th width="10%"></th>
+									</thead>
+								</table>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
 				</div>
 
 				<div class="panel-footer" style="text-align:right">
@@ -123,13 +203,13 @@
 								<div class="form-group col-md-9">
 									<label class="col-md-12">Nº</label>
 									<div class="col-md-5">
-										<input type="text" class="form-control col-md-12" placeholder="Numero da Nota">
+										<input type="text" class="form-control col-md-12" placeholder="Numero da Nota" ng-model="nota.numero">
 									</div>
 								</div>
 								
 								<div class="form-group col-md-3" style="text-align:right">
 									<label>Data:</label>
-									<label>{{data | date : "dd/MM/y"}}</label>
+									<label>{{nota.data | date : "dd/MM/y"}}</label>
 								</div>
 							</div>
 						</form>
@@ -150,7 +230,7 @@
 									<td>{{cliente.bairro | uppercase}}</td>
 									<td>{{cliente.endereco | uppercase}}</td>
 									<td>
-										<button class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+										<button class="btn btn-success btn-sm" ng-click="selecionarCliente(cliente)"><span class="glyphicon glyphicon-ok"></span></button>
 									</td>
 								</tr>
 							</tbody>
@@ -159,7 +239,7 @@
 
 					<div class="modal-footer">
 					    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelar()">Cancelar</button>
-					    <button type="button" class="btn btn-primary" ng-click="confirmar()">Confirmar</button>
+					    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="confirmar()">Confirmar</button>
 	     			</div>
 				</div>
 			</div>

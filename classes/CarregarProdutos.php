@@ -1,11 +1,9 @@
 <?php 
+	spl_autoload_register(function($class_name) { include $class_name . '.php'; } );
 	header('Access-Control-Allow-Origin: *');
 	header('Content-Type: application/json, charset=UTF-8');
 
-	$conn = new PDO("mysql:host=localhost;dbname=estudos", "luiz", "200901");
-	$stmt = $conn->prepare("select * from produto");
-	$stmt->execute();
-	$result = $stmt->fetchAll(PDO::FETCH_OBJ);
+	$result = ProdutoDAO::carregar();
 
 	echo json_encode($result);
  ?>

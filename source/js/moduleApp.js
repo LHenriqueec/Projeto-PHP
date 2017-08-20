@@ -91,7 +91,7 @@ app.controller("clienteCotnroller", function($scope, $http) {
 
 	$http.post('classes/CarregarClientes.php')
 		.then(function(response) {
-			$scope.clientes = response.data.clientes;
+			$scope.clientes = response.data;
 		});
 
 	$scope.novo = function() {
@@ -123,7 +123,7 @@ app.controller("clienteCotnroller", function($scope, $http) {
 	};
 
 	$scope.remover = function(cliente) {
-		$http.post('classes/DeletarCliente.php', {"cnpj":cliente.cnpj});
+		$http.post('classes/DeletarCliente.php', cliente.cnpj);
 		$scope.clientes.splice($scope.clientes.indexOf(cliente), 1);
 		$scope.cliente = {};
 		isEdit = false;
