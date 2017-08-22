@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="source/css/main.css">
+	
 	<title>Principal</title>
 </head>
 <body>
@@ -13,78 +13,129 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
 
-	<div class="row" style="margin:5px;">
-		
-		<div class="panel panel-default col-md-12" style="margin:0px 0px 15px 0px;padding-top:10px;text-align:center">
-			<div class="panel-body">
-				
-				<div class="col-md-3">
+	<script type="text/javascript">
+		angular.module("app", []).controller("controller", function($scope) {
+			$scope.itens = undefined;
+			$scope.item = {};
+			$scope.total = 0;
+			$scope.searchProduto = '';
 
-					<div class="form-group">
-						<label>Nº da Nota:</label> 16175 
-					</div>
-					
-					<div class="form-group">
-						<label>Data:</label> 20/08/2017
-					</div>
-					
-				</div>
-				<div class="col-md-5">
-				
-					<div class="form-group">
-						<label>Cliente:</label> O30 EXAME SEDE
-					</div>
-					
-					<div class="form-group">
-						<label>Endereço:</label> SETOR DE CLUBES SUL 117
-					</div>
+			$scope.inserir = function() {
+				if(!$scope.itens) $scope.itens = [];
+				$scope.itens.push($scope.item);
+				$scope.total = Number.parseInt($scope.total) + Number.parseInt($scope.item.quantidade);
+				$scope.item = {};
+				$scope.searchProduto = '';
+			};
 
-				</div>
-				<div class="col-md-4">
-				
-					<div class="form-group">
-						<label>UF:</label> DF
-						<label>Cidade:</label> BRASÍLIA
-					</div>
-					
-					
-					
-					<div class="form-group">
-						<label>Bairro:</label> ASA SUL
-					</div>
+			$scope.remover = function(item) {
+				$scope.total = Number.parseInt($scope.total) - Number.parseInt($scope.itens[item].quantidade);
+				$scope.itens.splice(item, 1);
+				if($scope.itens.length == 0) $scope.itens = undefined;
+			};
 
+			$scope.buscarProduto = function() {
+				$scope.item = {produto:{codigo:10, nome:'PICOLE LIMAO'}};
+				$scope.searchProduto = $scope.item.produto.codigo + ' - ' + $scope.item.produto.nome;
+			};
+		});
+	</script>
+
+	<div ng-app="app" ng-controller="controller">
+	{{nome.ano.idade}}
+		<div class="row" style="margin:5px;">
+			
+			<div class="panel panel-default col-md-12" style="margin:0px 0px 15px 0px;padding-top:10px;text-align:center">
+				<div class="panel-body">
+					
+					<div class="col-md-3">
+
+						<div class="form-group">
+							<label>Nº da Nota:</label> 16175 
+						</div>
+						
+						<div class="form-group">
+							<label>Data:</label> 20/08/2017
+						</div>
+						
+					</div>
+					<div class="col-md-5">
+					
+						<div class="form-group">
+							<label>Cliente:</label> O30 EXAME SEDE
+						</div>
+						
+						<div class="form-group">
+							<label>Endereço:</label> SETOR DE CLUBES SUL 117
+						</div>
+
+					</div>
+					<div class="col-md-4">
+					
+						<div class="form-group">
+							<label>UF:</label> DF
+							<label>Cidade:</label> BRASÍLIA
+						</div>
+						
+						
+						
+						<div class="form-group">
+							<label>Bairro:</label> ASA SUL
+						</div>
+
+					</div>
 				</div>
 			</div>
-		</div>
-		
-		<div class="panel panel-default col-md-12" style="margin:0px;padding-top: 10px">
-			<div class="panel-body">
+			
+			<div class="panel panel-default col-md-12" style="margin:0px;padding-top: 10px">
+				<div class="panel-body">
 
-				<div class="col-md-8 form-inline">
-					<div class="form-group">
-						<label for="produto">Produto</label>
-						<input id="produto" class="form-control" placeholder="Produto">
-						<label for="produto">Quantidade</label>
-						<input id="produto" class="form-control" placeholder="Quantidade">
+					<div class="col-md-8 form-inline">
+						<button class="btn btn-success btn-sm"><span class="glyphicon glyphicon-search"></span></button>
+						<div class="form-group">
+							<label for="produto">Produto</label>
+							<input id="produto" class="form-control" ng-model="searchProduto" placeholder="Produto" ng-blur="buscarProduto()">
+							<label for="produto">Quantidade</label>
+							<input id="produto" class="form-control" ng-model="item.quantidade" placeholder="Quantidade">
+						</div>
+
+						<button class="btn btn-primary btn-sm" ng-click="inserir()">Inserir</button>
 					</div>
-
-					<button class="btn btn-primary btn-sm">Inserir</button>
+					
+					<div>
+						<table class="table table-hover">
+							<thead>
+								<th>Código</th>
+								<th width="70%">Produto</th>
+								<th style="text-align:center">Quantidade</th>
+								<th width="20%"></th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in itens">
+									<td>{{item.produto.codigo}}</td>
+									<td>{{item.produto.nome | uppercase}}</td>
+									<td style="text-align:center">{{item.quantidade}}</td>
+									<td style="text-align:center">
+										<button class="btn btn-warning btn-sm">Alterar</button>
+										<button class="btn btn-danger btn-sm" ng-click="remover($index)">Deletar</button>
+									</td>
+								</tr>
+								<tr ng-show="!itens">
+									<td colspan="4" style="text-align:center">Não há produtos lançados</td>
+								</tr>
+								<tr ng-show="itens">
+									<td colspan="2" style="font-weight:bold" align="">Total</td>
+									<td align="center">{{total}}</td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
 				</div>
-				
-				<div>
-					<table class="table table-hover">
-						<thead>
-							<th>Código</th>
-							<th width="80%">Produto</th>
-							<th>Quantidade</th>
-							<th width="10%"></th>
-						</thead>
-					</table>
-				</div>
-
 			</div>
-		</div>
 
+		</div>
 	</div>
-	</body>
+</body>
 </html>
