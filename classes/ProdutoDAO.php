@@ -4,6 +4,15 @@
 
 	class ProdutoDAO {
 
+		public static function buscar($value) {
+			$sql = "select * from produto where nome like '%" . $value . "%'";
+			$conn = ConnectionUtil::connection();
+			$stmt = $conn->prepare($sql);
+			$stmt->execute();
+
+			return $stmt->fetch(PDO::FETCH_OBJ);
+		}
+
 		public static function alterar($produto) {
 			$sql = 'update produto set nome=:nome where codigo=:codigo';
 			$conn = ConnectionUtil::connection();

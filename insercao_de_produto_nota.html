@@ -20,6 +20,13 @@
 			$scope.total = 0;
 			$scope.searchProduto = '';
 
+			$scope.teste = 'teste';
+
+			$scope.$on('teste', function(event, message) {
+				$scope.teste = message;
+				console.info(message);
+			});
+
 			$scope.inserir = function() {
 				if(!$scope.itens) $scope.itens = [];
 				$scope.itens.push($scope.item);
@@ -38,11 +45,18 @@
 				$scope.item = {produto:{codigo:10, nome:'PICOLE LIMAO'}};
 				$scope.searchProduto = $scope.item.produto.codigo + ' - ' + $scope.item.produto.nome;
 			};
+		})
+		.controller('controller2', function($scope, $rootScope) {
+
+			$scope.funcao = function() {
+				console.info('funcao chamada');
+				$rootScope.$broadcast('teste', {message:'Olá, fui enviada pelo Darth Vader'});
+			}
 		});
 	</script>
 
-	<div ng-app="app" ng-controller="controller">
-	{{nome.ano.idade}}
+	<div ng-app='app' ng-controller="controller">
+	
 		<div class="row" style="margin:5px;">
 			
 			<div class="panel panel-default col-md-12" style="margin:0px 0px 15px 0px;padding-top:10px;text-align:center">
@@ -131,11 +145,10 @@
 							</tbody>
 						</table>
 					</div>
-					
 				</div>
 			</div>
 
 		</div>
 	</div>
 </body>
-</html>
+</html>	
