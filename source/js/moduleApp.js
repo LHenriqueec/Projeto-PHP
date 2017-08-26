@@ -4,7 +4,7 @@ app.config(function($routeProvider) {
 	$routeProvider
 		.when("/", {
 			templateUrl : "views/main.html",
-			controller : "mainController"
+			controller : "mainController as main"
 		})
 		.when("/clientes", {
 			templateUrl : "views/clientes.html",
@@ -13,25 +13,117 @@ app.config(function($routeProvider) {
 		.when("/produtos", {
 			templateUrl : "views/produtos.html",
 			controller : "produtoController"
+		})
+		.when("/notas", {
+			templateUrl : "views/notas.html",
+			controller : "notaController as cNota"
 		});
 });
 
 <!-- Main controller -->
-app.controller("mainController", function($scope, $http) {
+app.controller("mainController", function($scope, $http, $rootScope) {
+	//TODO: buscar os itens das Notas registradas no banco de dados
 	$scope.produtos = [
 				{codigo: 10, nome: "picole", quantidade: 500},
 				{codigo: 12, nome: "cup", quantidade: 500},
 				{codigo: 123, nome: 'pote', quantidade: 120}
 				];
 	$scope.total = 0;
+});
 
-	for (var i = $scope.produtos.length - 1; i >= 0; i--) {
-		var produto = $scope.produtos[i];
-		$scope.total += produto.quantidade;
+<!-- Nota Controller -->
+app.controller("notaController", function($http) {
+	var ctrl = this;
+	ctrl.isNew = false;
+	ctrl.nota = undefined;
+	ctrl.item = {};
+	ctrl.itens = undefined;
+	ctrl.total = 0;
+	ctrl.search = undefined;
 
-	}
+	//TODO: carregar a notas no banco de dados
 
-	
+	$http.post('classes/CarregarClientes.php')
+		.then(function(response) {
+			ctrl.clientes = response.data;
+		});
+
+	ctrl.novo = function() {
+		ctrl.nota = {};
+		ctrl.nota.data = new Date();
+		ctrl.isNew = true;
+	};
+
+	ctrl.inserir = function() {
+		if(!ctrl.itens) ctrl.itens = [];
+		ctrl.itens.push(ctrl.item);
+		ctrl.search = '';
+		ctrl.item = {};
+	};
+
+	ctrl.buscarProduto = function() {
+		if (!ctrl.search)
+			return;
+		var req = {
+			method : 'GET',
+			url : 'classes/BuscarProduto.php',
+			params : {
+				search : ctrl.search
+			}
+		};
+		$http(req).then(
+				function(response) {
+					var produto = response.data;
+
+					if (!produto) {
+						ctrl.search = 'Não encontrado';
+					} else {
+						ctrl.item.produto = produto;
+						ctrl.search = produto.codigo
+								+ " - " + produto.nome;
+					}
+				});
+	};
+
+	ctrl.salvar = function() {
+		//TODO: salvar a nota no bano de dados
+		ctrl.nota.itens = ctrl.itens;
+		var json = angular.toJson(ctrl.nota);
+		
+
+		$http.post('classes/SalvarNota.php', json).then(function(response) {
+			console.info(response.data);
+		});
+		if(!ctrl.notas) ctrl.notas = [];
+		ctrl.notas.push(ctrl.nota);
+		limpar();
+		ctrl.isNew = false;
+	};
+
+	ctrl.deletar = function(index) {
+		//TODO: deletar a nota do banco de dados
+		ctrl.notas.splice(index, 1);
+		if(ctrl.notas.length == 0) ctrl.notas = undefined;
+	};
+
+	ctrl.selecionarCliente = function(cliente) {
+		ctrl.nota.cliente = cliente;
+	};
+
+	ctrl.confirmar = function() {
+		
+	};
+
+	ctrl.cancelar = function() {
+		ctrl.isNew = false;
+		limpar();
+
+	};
+
+	function limpar() {
+		ctrl.nota = undefined;
+		ctrl.itens = undefined;
+	};
 });
 
 <!-- Produto controller -->
@@ -39,6 +131,12 @@ app.controller("mainController", function($scope, $http) {
 app.controller("produtoController", function($scope, $http) {
 	$scope.isEdit = false;
 	$scope.produto = {};
+	$scope.teste = 'mensagem não recebida!';
+
+	$scope.$on('teste', function(event, message) {
+		$scope.teste = message;
+		console.info(message);
+	});
 
 	$http.post('classes/CarregarProdutos.php')
 	.then(function(response) {

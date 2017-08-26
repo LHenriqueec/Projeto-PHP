@@ -1,251 +1,188 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-	<meta charset="utf-8">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="../source/css/main.css">
-	<title>Principal</title>
-</head>
-<body>
-	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
-	<script type="text/javascript">
-		angular.module("app", []).controller("controller", function($scope, $http) {
-			$scope.isNew = false;
-			$scope.nota = undefined;
-			$scope.notas = [];
-			
+<div style="padding:10px" ng-show="!cNota.isNew">
+	<div class="col-md-2">
+		<input type="text" class="form-control" placeholder="Pesquisar nota" ng-model="cNota.notaFilter">
+	</div>
 
-			$scope.novo = function() {
-				$scope.isNew = true;
-				$scope.nota = {};
-				$scope.nota.data = new Date();
-				$scope.clientes = [
-					{nome:"g18 exame mega taguatinga", bairro:"taguatinga", endereco:"sgas 10 rua 12 conj d"},
-					{nome:"o30 exame sede", bairro:"asa sul", endereco:"shis sul qd 25"}
-				];
-			};
+	<button class="btn btn-primary" data-toggle="modal" data-target="#model-nota" ng-click="cNota.novo()">Novo</button>
 
-			$scope.cancelar = function() {
-				$scope.isNew = false;
-			};
+	<table class="table table-hover">
+		<thead>
+			<th width="10%" style="text-align:center">Nota</th>
+			<th style="text-align:left">Cliente</th>
+			<th width="10%" style="text-align:center">Data</th>
+			<th width="15%" style="text-align:center"></th>
+		</thead>
+		<tbody>
+			<tr ng-repeat="nota in cNota.notas | filter: cNota.notaFilter" ng-show="cNota.notas">
+				<td style="text-align:center">{{nota.numero}}</td>
+				<td>{{nota.cliente.nome | uppercase}}</td>
+				<td style="text-align:center">{{nota.data | date : "dd/MM/y"}}</td>
+				<td>
+					<button class="btn btn-danger btn-sm" ng-click='cNota.deletar($index)'>Excluir</button>
+				</td>
+			</tr>
+			<tr ng-show="!cNota.notas">
+				<td colspan="4" style="text-align:center">Não há notas registradas</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
 
-			$scope.confirmar = function() {
-				console.info($scope.nota);
-				$notas.push(nota);
-			};
+<div ng-show="cNota.isNew">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<!-- TODO: content da inserção de produto da nota -->
+			<div class="row" style="margin:5px;">
 
-			$scope.salvar = function() {
-				$scope.notas.push($scope.nota);
-				$scope.nota = {};
-			};
-			
-			$scope.alterar = function() {
+				<div class="panel panel-default col-md-12" style="margin:0px 0px 15px 0px;padding-top:10px;text-align:center">
+					<div class="panel-body">
+						
+						<div class="col-md-3">
 
-			};
+							<div class="form-group">
+								<label>Nº da Nota:</label> {{cNota.nota.numero}} 
+							</div>
+							
+							<div class="form-group">
+								<label>Data:</label> {{cNota.nota.data | date : "dd/MM/y"}}
+							</div>
+							
+						</div>
+						<div class="col-md-5">
+							
+							<div class="form-group">
+								<label>Cliente:</label> {{cNota.nota.cliente.nome | uppercase}}
+							</div>
+							
+							<div class="form-group">
+								<label>Endereço:</label> {{cNota.nota.cliente.logradouro | uppercase}}
+							</div>
 
-			$scope.deletar = function(nota) {
-				$scope.notas.splice($scope.notas.indexOf(nota), 1);
-			};
+						</div>
+						<div class="col-md-4">
+							
+							<div class="form-group">
+								<label>UF:</label> {{cNota.nota.cliente.uf | uppercase}}
+								<label>Cidade:</label> {{cNota.nota.cliente.cidade | uppercase}}
+							</div>
+							
+							
+							
+							<div class="form-group">
+								<label>Bairro:</label> {{cNota.nota.cliente.bairro | uppercase}}
+							</div>
 
-			$scope.selecionarCliente = function(cliente) {
-				$scope.nota.cliente = cliente;
-				console.info($scope.nota.cliente);
-			}
+						</div>
+					</div>
+				</div>
+				
+				<div class="panel panel-default col-md-12" style="margin:0px;padding-top: 10px">
+					<div class="panel-body">
 
-			$scope.show = function() {
-				return $scope.notas.length == 0;
-			};
+						<div class="col-md-8 form-inline">
+							<div class="form-group">
+								<label for="produto">Produto</label>
+								<input id="produto" class="form-control" ng-model='cNota.search' ng-blur='cNota.buscarProduto()' placeholder="Produto">
+								<label for="quantidade">Quantidade</label>
+								<input id="quantidade" class="form-control" ng-model='cNota.item.quantidade' placeholder="Quantidade">
+							</div>
 
-		});
-	</script>
+							<button class="btn btn-primary btn-sm" ng-click='cNota.inserir()'>Inserir</button>
+						</div>
+						
+						<div>
+							<table class="table table-hover">
+								<thead>
+									<th>Código</th>
+									<th width="80%">Produto</th>
+									<th>Quantidade</th>
+									<th width="10%"></th>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in cNota.itens">
+										<td>{{item.produto.codigo}}</td>
+										<td>{{item.produto.nome | uppercase}}</td>
+										<td>{{item.quantidade}}</td>
+										<td>
+											<button class="btn btn-danger btn-sm">Remover</button>
+										</td>
+									</tr>
+									<tr ng-show="!cNota.itens">
+										<td colspan="4" align="center">Nenhum item lançado</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 
+					</div>
+				</div>
 
-	<div ng-app="app" ng-controller="controller">
-		
-		
-
-		
-
-		<div style="padding:10px" ng-show="!isNew">
-			<div class="col-md-2">
-				<input type="text" class="form-control" placeholder="Pesquisar nota" ng-model="notaFilter">
 			</div>
-
-			<button class="btn btn-primary" data-toggle="modal" data-target="#model-nota" ng-click="novo()">Novo</button>
-
-			<table class="table table-hover">
-				<thead>
-					<th width="10%" style="text-align:center">Nota</th>
-					<th style="text-align:left">Cliente</th>
-					<th width="10%" style="text-align:center">Data</th>
-					<th width="15%" style="text-align:center"></th>
-				</thead>
-				<tbody>
-					<tr ng-repeat="nota in notas | filter: notaFilter" ng-show="notas">
-						<td style="text-align:center">{{nota.nota}}</td>
-						<td>{{nota.cliente | uppercase}}</td>
-						<td style="text-align:center">{{nota.data}}</td>
-						<td>
-							<a href="#" class="link">Alterar</a>
-							<a href="#" class="link" ng-click="deletar(nota)">Excluir</a>
-						</td>
-					</tr>
-					<tr ng-show="show()">
-						<th colspan="4" style="text-align:center">Não há notas registradas</th>
-					</tr>
-				</tbody>
-			</table>
 		</div>
 
-		<div ng-show="isNew">
-			<div class="panel panel-default">
-				<div class="panel-body">
-				<!-- TODO: content da inserção de produto da nota -->
-				<div class="row" style="margin:5px;">
-		
-					<div class="panel panel-default col-md-12" style="margin:0px 0px 15px 0px;padding-top:10px;text-align:center">
-						<div class="panel-body">
-							
-							<div class="col-md-3">
+		<div class="panel-footer" style="text-align:right">
+			<button class="btn btn-default" ng-click="cNota.cancelar()">Cancelar</button>
+			<button class="btn btn-primary" ng-click="cNota.salvar()">Salvar</button>
+		</div>
+	</div>
+</div>
 
-								<div class="form-group">
-									<label>Nº da Nota:</label> 16175 
-								</div>
-								
-								<div class="form-group">
-									<label>Data:</label> 20/08/2017
-								</div>
-								
-							</div>
+<div id="model-nota" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="model-nota">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+				<h4 class="modal-title">Lançamento Notas</h4>
+			</div>
+
+			<div class="modal-body">
+				<form>
+					<div class="row">
+						
+						<div class="form-group col-md-9">
+							<label class="col-md-12">Nº</label>
 							<div class="col-md-5">
-							
-								<div class="form-group">
-									<label>Cliente:</label> O30 EXAME SEDE
-								</div>
-								
-								<div class="form-group">
-									<label>Endereço:</label> SETOR DE CLUBES SUL 117
-								</div>
-
-							</div>
-							<div class="col-md-4">
-							
-								<div class="form-group">
-									<label>UF:</label> DF
-									<label>Cidade:</label> BRASÍLIA
-								</div>
-								
-								
-								
-								<div class="form-group">
-									<label>Bairro:</label> ASA SUL
-								</div>
-
+								<input type="text" class="form-control col-md-12" placeholder="Numero da Nota" ng-model="cNota.nota.numero">
 							</div>
 						</div>
-					</div>
-					
-					<div class="panel panel-default col-md-12" style="margin:0px;padding-top: 10px">
-						<div class="panel-body">
-
-							<div class="col-md-8 form-inline">
-								<div class="form-group">
-									<label for="produto">Produto</label>
-									<input id="produto" class="form-control" placeholder="Produto">
-									<label for="produto">Quantidade</label>
-									<input id="produto" class="form-control" placeholder="Quantidade">
-								</div>
-
-								<button class="btn btn-primary btn-sm">Inserir</button>
-							</div>
-							
-							<div>
-								<table class="table table-hover">
-									<thead>
-										<th>Código</th>
-										<th width="80%">Produto</th>
-										<th>Quantidade</th>
-										<th width="10%"></th>
-									</thead>
-								</table>
-							</div>
-
+						
+						<div class="form-group col-md-3" style="text-align:right">
+							<label>Data:</label>
+							<label>{{cNota.nota.data | date : "dd/MM/y"}}</label>
 						</div>
 					</div>
+				</form>
 
+				<div class="form-group col-md-5">
+					<input class="form-control" ng-model="cNota.clienteFilter" placeholder="Pesquisar cliente"></input>
 				</div>
-				</div>
+				<table class="table table-hover">
+					<thead>
+						<th>Cliente</th>
+						<th>Bairro</th>
+						<th>Endereço</th>
+						<th></th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="cliente in cNota.clientes | filter : cNota.clienteFilter">
+							<td>{{cliente.nome | uppercase}}</td>
+							<td>{{cliente.bairro | uppercase}}</td>
+							<td>{{cliente.endereco | uppercase}}</td>
+							<td>
+								<button class="btn btn-success btn-sm" ng-click="cNota.selecionarCliente(cliente)" data-dismiss="modal"><span class="glyphicon glyphicon-ok"></span></button>
+							</td>
+						</tr>
+						<tr ng-show="!cNota.clientes">
+							<td colspan="4" align="center">Nenhum cliente registrado</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 
-				<div class="panel-footer" style="text-align:right">
-					<button class="btn btn-default" ng-click="cancelar()">Cancelar</button>
-					<button class="btn btn-primary" ng-click="salvar()">Salvar</button>
-				</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cNota.cancelar()">Cancelar</button>
 			</div>
 		</div>
-
-		<div id="model-nota" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="model-nota">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-
-						<h4 class="modal-title">Lançamento Notas</h4>
-					</div>
-
-					<div class="modal-body">
-						<form>
-							<div class="row">
-								
-								<div class="form-group col-md-9">
-									<label class="col-md-12">Nº</label>
-									<div class="col-md-5">
-										<input type="text" class="form-control col-md-12" placeholder="Numero da Nota" ng-model="nota.numero">
-									</div>
-								</div>
-								
-								<div class="form-group col-md-3" style="text-align:right">
-									<label>Data:</label>
-									<label>{{nota.data | date : "dd/MM/y"}}</label>
-								</div>
-							</div>
-						</form>
-
-						<div class="form-group col-md-5">
-							<input class="form-control" ng-model="clienteFilter" placeholder="Pesquisar cliente"></input>
-						</div>
-						<table class="table table-hover">
-							<thead>
-								<th>Cliente</th>
-								<th>Bairro</th>
-								<th>Endereço</th>
-								<th></th>
-							</thead>
-							<tbody>
-								<tr ng-repeat="cliente in clientes | filter : clienteFilter">
-									<td>{{cliente.nome | uppercase}}</td>
-									<td>{{cliente.bairro | uppercase}}</td>
-									<td>{{cliente.endereco | uppercase}}</td>
-									<td>
-										<button class="btn btn-success btn-sm" ng-click="selecionarCliente(cliente)"><span class="glyphicon glyphicon-ok"></span></button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div class="modal-footer">
-					    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelar()">Cancelar</button>
-					    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="confirmar()">Confirmar</button>
-	     			</div>
-				</div>
-			</div>
-		</div>
-
-	</div>	
-
-</body>
-</html
+	</div>
+</div>
