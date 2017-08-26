@@ -17,5 +17,14 @@
 					));
 			}
 		}
+
+		public static function deletar($nota) {
+			$sql = "delete from item_nota where nota_numero = :nota";
+			$conn = ConnectionUtil::connection();
+			$stmt = $conn->prepare($sql);
+			$stmt->execute(array (
+				'nota' => $nota
+			));
+		}
 	}
  ?>

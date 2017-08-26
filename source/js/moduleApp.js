@@ -41,14 +41,16 @@ app.controller("notaController", function($http) {
 	ctrl.total = 0;
 	ctrl.search = undefined;
 
-	//TODO: carregar a notas no banco de dados
+	$http.post('classes/CarregarNotas.php')
+		.then(function(response) {
+			ctrl.notas = response.data;
+		});
 
+	ctrl.novo = function() {
 	$http.post('classes/CarregarClientes.php')
 		.then(function(response) {
 			ctrl.clientes = response.data;
 		});
-
-	ctrl.novo = function() {
 		ctrl.nota = {};
 		ctrl.nota.data = new Date();
 		ctrl.isNew = true;
@@ -86,7 +88,6 @@ app.controller("notaController", function($http) {
 	};
 
 	ctrl.salvar = function() {
-		//TODO: salvar a nota no bano de dados
 		ctrl.nota.itens = ctrl.itens;
 		var json = angular.toJson(ctrl.nota);
 		
@@ -102,6 +103,7 @@ app.controller("notaController", function($http) {
 
 	ctrl.deletar = function(index) {
 		//TODO: deletar a nota do banco de dados
+		$http.get('classes/DeletarNota.php?nota=' + ctrl.notas[index].numero);
 		ctrl.notas.splice(index, 1);
 		if(ctrl.notas.length == 0) ctrl.notas = undefined;
 	};
