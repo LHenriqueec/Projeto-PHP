@@ -6,7 +6,7 @@
 	$nota = json_decode(file_get_contents("php://input"));
 
 	$nota->data = date_create($nota->data);
-	$nota->data = date_format($nota->data, "d/m/Y");
+	$nota->data = date_format($nota->data, "Y-m-d");
 	ItemNotaDAO::salvarItens($nota->itens);
 	NotaDAO::salvar($nota);
 
