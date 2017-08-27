@@ -12,6 +12,20 @@
 			return $stmt->fetchAll(PDO::FETCH_OBJ);
 		}
 
+		public static function carregarClientesSemCompra() {
+			$sql = "select c.cnpj, c.nome, c.bairro, c.logradouro, c.telefone from cliente c inner join recibo r
+					on c.cnpj = r.cnpj_cliente where week(r.emissao) < week(now()) group by c.cnpj
+					union
+					select c.cnpj, c.nome, c.bairro, c.logradouro, c.telefone from cliente c
+					where not exists (select r.numero from recibo r where r.cnpj_cliente = c.cnpj)";
+
+			$conn = ConnectionUtil::connection();
+			$stmt = $conn->prepare($sql);
+
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+		}
+
 		public static function salvar($cliente) {
 			$sql = "insert into cliente set cnpj=:cnpj, nome=:nome, uf=:uf, cidade=:cidade, bairro=:bairro, logradouro=:logradouro, telefone=:telefone, celular=:celular, email=:email";
 

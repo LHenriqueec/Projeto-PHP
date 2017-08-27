@@ -8,15 +8,17 @@
 			<div class="panel-body">
 				<table class="table table-hover table-condensed">
 					<tbody>
-						<tr ng-repeat="produto in produtos">
-							<td>{{produto.codigo}}</td>
-							<td>{{produto.nome | uppercase}}</td>
-							<td>{{produto.quantidade}}</td>
-							<td>#</td>
+						<tr ng-repeat="item in main.itens"">
+							<td>{{item.codigo}}</td>
+							<td>{{item.nome | uppercase}}</td>
+							<td style="text-align:center">{{item.quantidade}}</td>
 						</tr>
-						<tr >
-							<th>Total:</th>
-							<th colspan="3" style="text-align:right">{{total}}</th>
+						<tr style="font-weight:bold" ng-show='main.itens'>
+							<td colspan="2">Total:</td>
+							<td align="center">{{main.total}}</td>
+						</tr>
+						<tr ng-show='!main.itens'>
+						<td colspan="3" align="center">Nenhum Item registrado</td>
 						</tr>
 					</tbody>
 				</table>
@@ -33,29 +35,11 @@
 			<div class="panel-body">
 				<table class="table table-hover table-condensed">
 					<tbody>
-						<tr>
-							<td>G18 EXAME MEGA TAGUATINGA</td>
-							<td>TAGUATINGA</td>
-							<td>(61) 3036-7789</td>
-							<td>VANESSA</td>
-						</tr>
-						<tr>
-							<td>G18 EXAME MEGA TAGUATINGA</td>
-							<td>TAGUATINGA</td>
-							<td>(61) 3036-7789</td>
-							<td>VANESSA</td>
-						</tr>
-						<tr>
-							<td>G18 EXAME MEGA TAGUATINGA</td>
-							<td>TAGUATINGA</td>
-							<td>(61) 3036-7789</td>
-							<td>VANESSA</td>
-						</tr>
-						<tr>
-							<td>G18 EXAME MEGA TAGUATINGA</td>
-							<td>TAGUATINGA</td>
-							<td>(61) 3036-7789</td>
-							<td>VANESSA</td>
+						<tr ng-repeat="cliente in main.clientes">
+							<td>{{cliente.nome | uppercase}}</td>
+							<td>{{cliente.bairro | uppercase}}</td>
+							<td>{{cliente.logradouro | uppercase}}</td>
+							<td>{{cliente.telefone}}</td>
 						</tr>
 
 					</tbody>

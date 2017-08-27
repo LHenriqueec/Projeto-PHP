@@ -2,33 +2,48 @@ var app = angular.module("menuApp", ["ngRoute"]);
 
 app.config(function($routeProvider) {
 	$routeProvider
-		.when("/", {
-			templateUrl : "views/main.html",
-			controller : "mainController as main"
-		})
-		.when("/clientes", {
-			templateUrl : "views/clientes.html",
-			controller : "clienteCotnroller"
-		})
-		.when("/produtos", {
-			templateUrl : "views/produtos.html",
-			controller : "produtoController"
-		})
-		.when("/notas", {
-			templateUrl : "views/notas.html",
-			controller : "notaController as cNota"
-		});
+	.when("/", {
+		templateUrl : "views/main.html",
+		controller : "mainController as main"
+	})
+	.when("/clientes", {
+		templateUrl : "views/clientes.html",
+		controller : "clienteCotnroller"
+	})
+	.when("/produtos", {
+		templateUrl : "views/produtos.html",
+		controller : "produtoController"
+	})
+	.when("/notas", {
+		templateUrl : "views/notas.html",
+		controller : "notaController as cNota"
+	});
 });
 
 <!-- Main controller -->
 app.controller("mainController", function($scope, $http, $rootScope) {
-	//TODO: buscar os itens das Notas registradas no banco de dados
-	$scope.produtos = [
-				{codigo: 10, nome: "picole", quantidade: 500},
-				{codigo: 12, nome: "cup", quantidade: 500},
-				{codigo: 123, nome: 'pote', quantidade: 120}
-				];
-	$scope.total = 0;
+	var ctrl = this;
+	ctrl.itens = undefined;
+	ctrl.total = 0;
+	
+	$http.post('classes/CarregarItensNota.php')
+	.then(function(response) {
+		ctrl.itens = response.data;
+
+		if(ctrl.itens.length == 0) {
+			ctrl.itens = undefined;
+		} else {
+			for(var i = 0; ctrl.itens.length > i; i++) {
+				ctrl.total += Number.parseInt(ctrl.itens[i].quantidade);
+			}
+		}
+	});
+
+	$http.post('classes/CarregarClientesSemCompra.php')
+	.then(function(response) {
+		ctrl.clientes = response.data;
+		console.info(response.data[0]);
+	});
 });
 
 <!-- Nota Controller -->
@@ -42,12 +57,14 @@ app.controller("notaController", function($http) {
 	ctrl.search = undefined;
 
 	$http.post('classes/CarregarNotas.php')
-		.then(function(response) {
-			ctrl.notas = response.data;
-		});
+	.then(function(response) {
+		ctrl.notas = response.data;
+		if(ctrl.notas.length == 0) ctrl.notas = undefined;
+	});
+
 
 	ctrl.novo = function() {
-	$http.post('classes/CarregarClientes.php')
+		$http.post('classes/CarregarClientes.php')
 		.then(function(response) {
 			ctrl.clientes = response.data;
 		});
@@ -74,17 +91,17 @@ app.controller("notaController", function($http) {
 			}
 		};
 		$http(req).then(
-				function(response) {
-					var produto = response.data;
+			function(response) {
+				var produto = response.data;
 
-					if (!produto) {
-						ctrl.search = 'Não encontrado';
-					} else {
-						ctrl.item.produto = produto;
-						ctrl.search = produto.codigo
-								+ " - " + produto.nome;
-					}
-				});
+				if (!produto) {
+					ctrl.search = 'Não encontrado';
+				} else {
+					ctrl.item.produto = produto;
+					ctrl.search = produto.codigo
+					+ " - " + produto.nome;
+				}
+			});
 	};
 
 	ctrl.salvar = function() {
@@ -102,7 +119,6 @@ app.controller("notaController", function($http) {
 	};
 
 	ctrl.deletar = function(index) {
-		//TODO: deletar a nota do banco de dados
 		$http.get('classes/DeletarNota.php?nota=' + ctrl.notas[index].numero);
 		ctrl.notas.splice(index, 1);
 		if(ctrl.notas.length == 0) ctrl.notas = undefined;
@@ -156,14 +172,14 @@ app.controller("produtoController", function($scope, $http) {
 
 		if($scope.isEdit) {
 			$http.post("classes/AlterarProduto.php", json)
-				.then(function(response) {
-					console.info(response.data);
-				});
+			.then(function(response) {
+				console.info(response.data);
+			});
 		} else {
 			$http.post("classes/SalvarProduto.php", json)
-				.then(function(response) {
-					console.info(response.data);
-				});
+			.then(function(response) {
+				console.info(response.data);
+			});
 			$scope.produtos.push($scope.produto);
 		}
 
@@ -177,8 +193,8 @@ app.controller("produtoController", function($scope, $http) {
 		$scope.produto = {};
 
 		$http.post('classes/DeletarProduto.php', {"codigo":produto.codigo})
-			.then(function(response) {
-				console.info(response.data);
+		.then(function(response) {
+			console.info(response.data);
 		});
 	};
 });
@@ -190,9 +206,9 @@ app.controller("clienteCotnroller", function($scope, $http) {
 	var isEdit = false;
 
 	$http.post('classes/CarregarClientes.php')
-		.then(function(response) {
-			$scope.clientes = response.data;
-		});
+	.then(function(response) {
+		$scope.clientes = response.data;
+	});
 
 	$scope.novo = function() {
 		$scope.cliente = {};
@@ -207,9 +223,9 @@ app.controller("clienteCotnroller", function($scope, $http) {
 			console.info(json);
 		} else {
 			$http.post('classes/SalvarCliente.php', json)
-				.then(function(response) {
-					console.info(response.data);
-				});
+			.then(function(response) {
+				console.info(response.data);
+			});
 			$scope.clientes.push($scope.cliente);
 		}
 		
