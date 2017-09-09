@@ -46,6 +46,8 @@ app.controller("mainController", function($scope, $http, $rootScope) {
 	}
 
 	ctrl.cancelar = function() {
+		carregarClientesSemCompra();
+		carregarProdutos();
 		ctrl.isNew = false;
 	}
 
@@ -115,8 +117,10 @@ app.controller("mainController", function($scope, $http, $rootScope) {
 	}
 
 	function carregarRecibos() {
-	// TODO: Crirar Método
-}
+		$http.post("classes/action/recibo/CarregarRecibos.php").then(function(response) {
+			ctrl.recibos = angular.fromJson(response.data);
+		});
+	}
 });
 
 //  CONTROLLER: NOTA

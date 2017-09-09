@@ -1,6 +1,6 @@
 <?php 
 
-class ItemRecibo {
+class ItemRecibo implements JsonSerializable {
 
 	private $recibo;
 	private $produto;
@@ -14,38 +14,45 @@ class ItemRecibo {
 		$this->nota = $nota;
 	}
 
-	function getRecibo() {
+	public function getRecibo() {
 		return $this->recibo;
 	}
 
-	function getProduto() {
+	public function getProduto() {
 		return $this->produto;
 	}
 
-	function getQuantidade() {
+	public function getQuantidade() {
 		return $this->quantidade;
 	}
 
-	function getNota() {
+	public function getNota() {
 		return $this->nota;
 	}
 
-	function setRecibo($recibo) {
+	public function setRecibo($recibo) {
 		$this->recibo = $recibo;
 	}
 
-	function setProduto($produto) {
+	public function setProduto($produto) {
 		$this->produto = $produto;
 	}
 
-	function setQuantidade($quantidade) {
+	public function setQuantidade($quantidade) {
 		$this->quantidade = $quantidade;
 	}
 
-	function setNota($nota) {
+	public function setNota($nota) {
 		$this->nota = $nota;
 	}
 
-
+	public function jsonSerialize() {
+		return [
+		"recibo" => $this->recibo,
+		"produto" => $this->produto,
+		"quantidade" => $this->quantidade,
+		"nota" => $this->nota
+		];
+	}
 }
 ?>
