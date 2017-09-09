@@ -1,5 +1,5 @@
 <?php 
-	spl_autoload_register(function($class_name) { include $class_name . '.php'; });
+	require_once "../../util/ConnectionUtil.php";
 
 	class ClienteDAO {
 
@@ -13,10 +13,10 @@
 		}
 
 		public static function carregarClientesSemCompra() {
-			$sql = "select c.cnpj, c.nome, c.bairro, c.logradouro, c.telefone from cliente c inner join recibo r
+			$sql = "select c.cnpj, c.nome, c.bairro, c.logradouro, c.telefone, c.responsavel from cliente c inner join recibo r
 					on c.cnpj = r.cnpj_cliente where week(r.emissao) < week(now()) group by c.cnpj
 					union
-					select c.cnpj, c.nome, c.bairro, c.logradouro, c.telefone from cliente c
+					select c.cnpj, c.nome, c.bairro, c.logradouro, c.telefone, c.responsavel from cliente c
 					where not exists (select r.numero from recibo r where r.cnpj_cliente = c.cnpj)";
 
 			$conn = ConnectionUtil::connection();

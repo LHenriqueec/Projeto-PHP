@@ -1,5 +1,6 @@
 <?php
-	spl_autoload_register(function($class_name) { include $class_name . '.php'; });
+	require_once "../dao/NotaDAO.php";
+	
 	header("Access-Control-Allow: *");
 	header("Content-Type: application/json, charset=utf-8");
 

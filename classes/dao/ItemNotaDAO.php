@@ -1,8 +1,19 @@
 <?php 
-	spl_autoload_register(function($class_name) { include $class_name . '.php'; });
+	require_once "../../util/ConnectionUtil.php";
 	
 
 	class ItemNotaDAO {
+
+		public static function buscarItem($item) {
+			$sql = "select * from item_nota i where i.produto_codigo=:produto and i.quantidade > 0";
+			$conn = ConnectionUtil::connection();
+			$stmt = $conn->prepare($sql);
+			$stmt->execute(array(
+					"produto" => $item->produto->codigo
+				));
+
+			return $stmt->fetchAll(PDO::FETCH_OBJ);
+		}
 
 		public static function carretarTotalItem() {
 			$sql = "select p.codigo, p.nome, sum(i.quantidade) quantidade from produto p inner join item_nota i
