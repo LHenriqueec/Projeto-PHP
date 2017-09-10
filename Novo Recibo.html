@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="source/css/style.css">
+
+
+	<title>Projeto Estudo</title>
+</head>
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+
+	<script type="text/javascript">
+		angular.module('app', []).controller('controller', function() {
+			var ctrl = this;
+			ctrl.recibo = {};
+			ctrl.recibo.numero = '17000';
+			ctrl.recibo.emissao = '2017-09-10'
+
+			ctrl.recibo.cliente = {};
+			ctrl.recibo.cliente.nome = 'ultra frios';
+
+			ctrl.recibo.cliente.endereco = {};
+			ctrl.recibo.cliente.endereco.cidade = 'brasilia';
+			ctrl.recibo.cliente.endereco.bairro = 'vicente pires';
+			ctrl.recibo.cliente.endereco.logradouro = 'shvp chacara 134 galpoes 02 e 03';
+
+			ctrl.recibo.cliente.contato = {};
+			ctrl.recibo.cliente.contato.telefone = '6130367789';
+			ctrl.recibo.cliente.contato.celular = '61995217758';
+			ctrl.recibo.cliente.contato.email = 'wellington@ultrafrios.com.br';
+			ctrl.recibo.cliente.contato.responsavel = 'wellington';
+
+			ctrl.recibo.itens = [
+			{produto:{codigo:'10', nome:'picole limao'}, quantidade:23},
+			{produto:{codigo:'12', nome:'picole morango'}, quantidade:25}
+			];
+			ctrl.recibo.total = 48;
+		});
+	</script>
+
+	<div ng-app='app' ng-controller="controller as control">
+		<div class="col-md-12">
+
+			<div class="panel panel-primary">
+				<div class="panel-heading"><h3>Recibo</h3></div>
+				<div class="panel-body">
+
+					<!-- TODO: Crirar panel com o cabeçalho do Recibo -->
+					<div class="panel panel-primary">
+						<div class="panel-body">
+							<div class="col-xs-4">
+								<div class="form-group">
+									<label>Nº Recibo: </label> {{control.recibo.numero}}
+								</div>
+								<div class="form-group">
+									<label>Emissão: </label> {{control.recibo.emissao | date : 'dd/MM/y'}}
+								</div>
+								<div class="form-group">
+									<label>Cliente: </label> {{control.recibo.cliente.nome | uppercase}}
+								</div>
+							</div>
+							<div class="col-xs-4">
+								<div class="form-group">
+									<label>Cidade: </label> {{control.recibo.cliente.endereco.cidade | uppercase}}
+								</div>
+								<div class="form-group">
+									<label>Bairro: </label> {{control.recibo.cliente.endereco.bairro | uppercase}}
+								</div>
+								<div class="form-group">
+									<label>Endereço: </label> {{control.recibo.cliente.endereco.logradouro | uppercase}}
+								</div>
+							</div>
+							<div class="col-xs-4">
+								<div class="form-group">
+									<label>Contato: </label> {{control.recibo.cliente.contato.telefone | uppercase}} / {{control.recibo.cliente.contato.celular | uppercase}}
+								</div>
+								<div class="form-group">
+									<label>E-mail: </label> {{control.recibo.cliente.contato.email}}
+								</div>
+								<div class="form-group">
+									<label>Responsável: </label> {{control.recibo.cliente.contato.responsavel | uppercase}}
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- TODO: Crirar panel com o cabeçalho de assinatura do cliente -->
+					<div class="panel panel-primary">
+						<div class="panel-heading"><h4>Produtos</h4></div>
+						<div class="panel-body">
+							<table class="table table-condensed table-hover table-striped">
+								<tbody>
+									<tr ng-repeat="item in control.recibo.itens">
+										<td>{{item.produto.codigo}}</td>
+										<td>{{item.produto.nome | uppercase}}</td>
+										<td align="right">{{item.quantidade}} CX</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="panel-footer">
+							<label>Total:</label> <text class="pull-right">{{control.recibo.total}} CX</text>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="panel panel-primary">
+				<div class="panel-heading"><h4>Recibo: {{control.recibo.numero}}</h4></div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label>Data: </label> {{control.recibo.emissao | date: 'dd/MM/y'}}
+					</div>
+					<div class="form-group">
+						<label>Obserções:</label>
+						<hr>
+						<hr>
+						<hr>
+					</div>
+					<div class="form-group" align="center">
+						_______________________________________________<br>
+						Assinatura
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>	

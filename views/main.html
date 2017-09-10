@@ -29,11 +29,12 @@
 		<div class="panel panel-danger">
 			<div class="panel-heading">
 				<h4>Clientes sem compra na semana</h4>
+				<input class="form-control" type="text" ng-model="filterCliente" placeholder="Pesquisar..">
 			</div>
 			<div class="panel-body">
 				<table class="table table-hover table-condensed">
 					<tbody>
-						<tr ng-repeat="cliente in main.clientesSemCompra">
+						<tr ng-repeat="cliente in main.clientesSemCompra | filter : filterCliente">
 							<td>{{cliente.nome | uppercase}}</td>
 							<td>{{cliente.endereco.bairro | uppercase}}</td>
 							<td>{{cliente.contato.telefone}} / {{cliente.contato.celular}}</td>
@@ -53,6 +54,7 @@
 		<div class="panel-heading">
 			<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#modal-novo-recibo" ng-click="main.novoRecibo()"><span class="glyphicon glyphicon-plus"></span></button>
 			<h4>Recibo</h4>
+			<input class="form-control" type="text" ng-model="filterRecibo" placeholder="Pesquisar..">
 		</div>
 		<div class="panel-body">
 			<table class="table table-condensed table-hover">
@@ -66,7 +68,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="recibo in main.recibos">
+					<tr ng-repeat="recibo in main.recibos | filter : filterRecibo">
 						<td style="text-align:center;">{{recibo.numero}}</td>
 						<td>{{recibo.cliente.nome | uppercase}}</td>
 						<td align="center" data-toggle="tooltip" data-placement="top" ng-mouseover="main.info_recibo($index)" title="{{main.recibo_info}}">{{recibo.total}}</td>
@@ -79,7 +81,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td ng-show='!main.recibos' colspan="4" align="center">Nenhum recibo registrado</td>
+						<td ng-show='!main.recibos' colspan="5" align="center">Nenhum recibo registrado</td>
 					</tr>
 				</tbody>
 			</table>
