@@ -28,6 +28,7 @@ app.config(function($routeProvider) {
 app.controller("mainController", function($scope, $http, $rootScope) {
 	var ctrl = this;
 	var itemRecibo;
+	ctrl.recibo_info;
 
 	carregarProdutos();
 
@@ -100,6 +101,27 @@ app.controller("mainController", function($scope, $http, $rootScope) {
 		ctrl.item = {};
 	}
 
+	ctrl.info_recibo = function(index) {
+		ctrl.recibo_info = '';
+		var itens = ctrl.recibos[index].itens;
+		
+		itens.forEach(function(item) {
+			ctrl.recibo_info += item.produto.nome + ": ";
+
+			var filter = itens.filter(function(item_filter) {
+				return item.produto.codigo == item_filter.produto.codigo;
+			});
+
+			var quantidade = 0;
+			filter.forEach(function(item) {
+				quantidade += Number.parseInt(item.quantidade);
+			});
+
+			ctrl.recibo_info += Number.parseInt(quantidade) + "\n";
+		});
+
+	}
+
 	function gerarNumero() {
 		if(!ctrl.recibos || ctrl.recibos.length == 0) {
 			return '17000';
@@ -152,6 +174,7 @@ app.controller("mainController", function($scope, $http, $rootScope) {
 
 	}
 
+	// função usada no forEach para calcular do produtos por item
 	function recalcularProdutos(item) {
 		itemRecibo = item;
 		var itemNota = ctrl.itens.find(procurarItemNota);
@@ -159,6 +182,7 @@ app.controller("mainController", function($scope, $http, $rootScope) {
 		ctrl.total += Number.parseInt(item.quantidade);
 	}
 
+	// função usada no 'find' de arrays
 	function procurarItemNota(itemNota) {
 		return itemNota.codigo == itemRecibo.produto.codigo;
 	}

@@ -35,9 +35,9 @@
 					<tbody>
 						<tr ng-repeat="cliente in main.clientesSemCompra">
 							<td>{{cliente.nome | uppercase}}</td>
-							<td>{{cliente.bairro | uppercase}}</td>
-							<td>{{cliente.telefone}}</td>
-							<td>{{cliente.responsavel | uppercase}}</td>
+							<td>{{cliente.endereco.bairro | uppercase}}</td>
+							<td>{{cliente.contato.telefone}} / {{cliente.contato.celular}}</td>
+							<td>{{cliente.contato.responsavel | uppercase}}</td>
 						</tr>
 						<tr>
 							<td ng-show='!main.clientesSemCompra' colspan="4" align="center">Nenhum cliente sem compra</td>
@@ -55,7 +55,7 @@
 			<h4>Recibo</h4>
 		</div>
 		<div class="panel-body">
-			<table class="table table-hover">
+			<table class="table table-condensed table-hover">
 				<thead>
 					<tr>
 						<th width="10%" style="text-align:center;">Recibo</th>
@@ -69,7 +69,7 @@
 					<tr ng-repeat="recibo in main.recibos">
 						<td style="text-align:center;">{{recibo.numero}}</td>
 						<td>{{recibo.cliente.nome | uppercase}}</td>
-						<td align="center">{{recibo.total}}</td>
+						<td align="center" data-toggle="tooltip" data-placement="top" ng-mouseover="main.info_recibo($index)" title="{{main.recibo_info}}">{{recibo.total}}</td>
 						<td style="text-align:center;">{{recibo.data | date: "dd/MM/y"}}</td>
 						<td style="text-align:center;">
 							<!-- TODO: Criar funções 'Visualizar', 'Alterar', 'Excluir' Recibos no controller angular -->
