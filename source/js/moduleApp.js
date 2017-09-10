@@ -27,7 +27,8 @@ app.config(function($routeProvider) {
 // CONTROLLER: MAIN
 app.controller("mainController", function($scope, $http, $rootScope) {
 	var ctrl = this;
-	
+	var itemRecibo;
+
 	carregarProdutos();
 
 	carregarClientesSemCompra();
@@ -60,6 +61,15 @@ app.controller("mainController", function($scope, $http, $rootScope) {
 		ctrl.recibo = {};
 	}
 
+	ctrl.deletar_recibo = function(index) {
+		ctrl.recibos[index].itens.forEach(recalcularProdutos);
+		
+		$http.get('classes/action/recibo/DeletarRecibo.php?recibo=' + ctrl.recibos[index].numero);
+		
+		ctrl.recibos.splice(index, 1);
+		if(ctrl.recibos.length == 0) ctrl.recibos = undefined;
+	}
+
 	ctrl.selecionarCliente = function(cliente) {
 		ctrl.recibo.cliente = cliente;
 		ctrl.isNew = true;
@@ -80,18 +90,22 @@ app.controller("mainController", function($scope, $http, $rootScope) {
 	}
 
 	ctrl.inserir = function() {
-		if(!ctrl.recibo.itens) ctrl.recibo.itens = [];
+		if(!ctrl.recibo.itens) {
+			ctrl.recibo.itens = [];
+			ctrl.recibo.total = 0;
+		}
 		ctrl.recibo.itens.push(ctrl.item);
+		ctrl.recibo.total += Number.parseInt(ctrl.item.quantidade);
 		ctrl.searchProduto = '';
 		ctrl.item = {};
 	}
 
 	function gerarNumero() {
-		if(!ctrl.recibos) {
+		if(!ctrl.recibos || ctrl.recibos.length == 0) {
 			return '17000';
 		} else {
-			size = ctrl.recibos.length;
-			return Number.parseInt(ctrl.recibos[size - 1].numero) + 1;
+			index = ctrl.recibos.length - 1;
+			return Number.parseInt(ctrl.recibos[index].numero) + 1;
 		}
 	}
 
@@ -118,8 +132,35 @@ app.controller("mainController", function($scope, $http, $rootScope) {
 
 	function carregarRecibos() {
 		$http.post("classes/action/recibo/CarregarRecibos.php").then(function(response) {
-			ctrl.recibos = angular.fromJson(response.data);
+			ctrl.recibos = response.data;
+			if(ctrl.recibos.length == 0) {
+				ctrl.recibos = undefined;
+				return;
+			}
+
+			for(var index = 0; index < ctrl.recibos.length; index++) {
+				var recibo = ctrl.recibos[index];
+
+				for(var i = 0; i < recibo.itens.length; i++) {
+					if(!recibo.total) recibo.total = 0;
+					recibo.total += Number.parseInt(recibo.itens[i].quantidade);
+				}
+
+			}
 		});
+
+
+	}
+
+	function recalcularProdutos(item) {
+		itemRecibo = item;
+		var itemNota = ctrl.itens.find(procurarItemNota);
+		itemNota.quantidade = Number.parseInt(itemNota.quantidade) + Number.parseInt(item.quantidade);
+		ctrl.total += Number.parseInt(item.quantidade);
+	}
+
+	function procurarItemNota(itemNota) {
+		return itemNota.codigo == itemRecibo.produto.codigo;
 	}
 });
 

@@ -21,6 +21,15 @@ class ReciboDAO {
 		ItemReciboDAO::salvarItens($recibo->itens);
 	}
 
+	public static function deletar($recibo) {
+		$sql = "delete from recibo where numero = :numero";
+		$conn = ConnectionUtil::connection();
+		$stmt = $conn->prepare($sql);
+		$stmt->execute(array(
+			"numero" => $recibo
+			));
+	}
+
 	public static function carregarRecibos() {
 		$sql = "select * from recibo r inner join cliente c
 		on r.cnpj_cliente = c.cnpj";
