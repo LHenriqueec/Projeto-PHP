@@ -1,21 +1,87 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-	<meta charset="utf-8">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="source/css/style.css">
+<div class="col-md-12">
 
+	<div class="panel panel-primary">
+		<div class="panel-heading"><h3>Recibo</h3></div>
+		<div class="panel-body">
 
-	<title>Projeto Estudo</title>
-</head>
-<body>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
-	<script src="source/js/moduleApp.js"></script>
+			<!-- TODO: Crirar panel com o cabeçalho do Recibo -->
+			<div class="panel panel-primary">
+				<div class="panel-body">
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label>Nº Recibo: </label> {{cRecibo.recibo.numero}}
+						</div>
+						<div class="form-group">
+							<label>Emissão: </label> {{cRecibo.recibo.data | date : 'dd/MM/y'}}
+						</div>
+						<div class="form-group">
+							<label>Cliente: </label> {{cRecibo.recibo.cliente.nome | uppercase}}
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label>Cidade: </label> {{cRecibo.recibo.cliente.endereco.cidade | uppercase}}
+						</div>
+						<div class="form-group">
+							<label>Bairro: </label> {{cRecibo.recibo.cliente.endereco.bairro | uppercase}}
+						</div>
+						<div class="form-group">
+							<label>Endereço: </label> {{cRecibo.recibo.cliente.endereco.logradouro | uppercase}}
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label>Contato: </label> {{cRecibo.recibo.cliente.contato.telefone | uppercase}} / {{cRecibo.recibo.cliente.contato.celular | uppercase}}
+						</div>
+						<div class="form-group">
+							<label>E-mail: </label> {{cRecibo.recibo.cliente.contato.email}}
+						</div>
+						<div class="form-group">
+							<label>Responsável: </label> {{cRecibo.recibo.cliente.contato.responsavel | uppercase}}
+						</div>
+					</div>
+				</div>
+			</div>
 
-	<h1>Recibo</h1>
+			<!-- TODO: Crirar panel com o cabeçalho de assinatura do cliente -->
+			<div class="panel panel-primary">
+				<div class="panel-heading"><h4>Produtos</h4></div>
+				<div class="panel-body">
+					<table class="table table-condensed table-hover table-striped">
+						<tbody>
+							<tr ng-repeat="item in cRecibo.recibo.itens">
+								<td>{{item.produto.codigo}}</td>
+								<td>{{item.produto.nome | uppercase}}</td>
+								<td align="right">{{item.quantidade}} CX</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="panel-footer">
+					<label>Total:</label> <text class="pull-right">{{cRecibo.recibo.total}} CX</text>
+				</div>
+			</div>
 
-</body>
-</html>
+		</div>
+	</div>
+</div>
+<div class="col-md-12">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><h4>Recibo: {{cRecibo.recibo.numero}}</h4></div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label>Data: </label> {{cRecibo.recibo.data | date: 'dd/MM/y'}}
+			</div>
+			<div class="form-group">
+				<label>Obserções:</label>
+				<hr>
+				<hr>
+				<hr>
+			</div>
+			<div class="form-group" align="center">
+				_______________________________________________<br>
+				Assinatura
+			</div>
+		</div>
+	</div>
+</div>

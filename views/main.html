@@ -71,11 +71,11 @@
 					<tr ng-repeat="recibo in main.recibos | filter : filterRecibo">
 						<td style="text-align:center;">{{recibo.numero}}</td>
 						<td>{{recibo.cliente.nome | uppercase}}</td>
-						<td align="center" data-toggle="tooltip" data-placement="top" ng-mouseover="main.info_recibo($index)" title="{{main.recibo_info}}">{{recibo.total}}</td>
+						<td align="center" data-toggle="tooltip" data-placement="top" ng-mouseover="main.infoRecibo($index)" title="{{main.recibo_info | uppercase}}">{{recibo.total}}</td>
 						<td style="text-align:center;">{{recibo.data | date: "dd/MM/y"}}</td>
 						<td style="text-align:center;">
 							<!-- TODO: Criar funções 'Visualizar', 'Alterar', 'Excluir' Recibos no controller angular -->
-							<button class="btn btn-info btn-sm"><span class="glyphicon glyphicon-th"></span></button>
+							<a href="#!recibo" type="button" class="btn btn-info btn-sm" ng-click="main.imprimir_recibo($index)"><span class="glyphicon glyphicon-th"></span></a href="#!recibo">
 							<button class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></button>
 							<button class="btn btn-danger btn-sm" ng-click="main.deletar_recibo($index)"><span class="glyphicon glyphicon-trash"></span></button>
 						</td>
@@ -158,22 +158,22 @@
 							<label>Cliente</label> {{main.recibo.cliente.nome | uppercase}}
 						</div>
 						<div class="form-group">
-							<label>Bairro</label> {{main.recibo.cliente.bairro | uppercase}}
+							<label>Bairro</label> {{main.recibo.cliente.endereco.bairro | uppercase}}
 						</div>
 						<div class="form-group">
-							<label>Endereço</label> {{main.recibo.cliente.logradouro | uppercase}}
+							<label>Endereço</label> {{main.recibo.cliente.endereco.logradouro | uppercase}}
 						</div>
 					</div>
 
 					<div class="col-md-4">
 						<div class="form-group">
-							<label>Responsável</label> {{main.recibo.cliente.responsavel | uppercase}}
+							<label>Responsável</label> {{main.recibo.cliente.contato.responsavel | uppercase}}
 						</div>
 						<div class="form-group">
-							<label>Telefone</label> {{main.recibo.cliente.telefone}} / {{main.cliente.celular}}
+							<label>Telefone</label> {{main.recibo.cliente.contato.telefone}} / {{main.cliente.contato.celular}}
 						</div>
 						<div class="form-group">
-							<label>E-mail</label> {{main.recibo.cliente.email}}
+							<label>E-mail</label> {{main.recibo.cliente.contato.email}}
 						</div>
 					</div>
 				</div>

@@ -20,12 +20,49 @@ app.config(function($routeProvider) {
 	})
 	.when("/recibo", {
 		templateUrl : "views/recibo.html",
+		controller : "reciboController as cRecibo"
 		
 	});
 });
 
+app.service("containerRecibo", function() {
+
+	this.selecionarRecibo = function(recibo) {
+		this.recibo = recibo;
+	}
+});
+
+// CONTROLLER: RECIBO
+app.controller("reciboController", function(containerRecibo) {
+	var ctrl = this;
+	ctrl.recibo = containerRecibo.recibo;
+	ctrl.recibo.itens = containerRecibo.recibo.itens;
+
+	var item_buffer;
+	var itens = [];
+	ctrl.recibo.itens.forEach(function(item) {
+		if(!item_buffer || item_buffer.produto.codigo != item.produto.codigo) {
+			item_buffer = {};
+			item_buffer.produto = item.produto;
+			item_buffer.quantidade = 0;
+
+			var filter_itens = ctrl.recibo.itens.filter(function(itemFilter) {
+				return item_buffer.produto.codigo == itemFilter.produto.codigo;
+			});
+
+			filter_itens.forEach(function(item) {
+				item_buffer.quantidade += Number.parseInt(item.quantidade);
+			});
+
+			itens.push(item_buffer);
+		}
+	});
+
+	ctrl.recibo.itens = itens;
+});
+
 // CONTROLLER: MAIN
-app.controller("mainController", function($scope, $http, $rootScope) {
+app.controller("mainController", function($scope, $http, $rootScope, containerRecibo) {
 	var ctrl = this;
 	var itemRecibo;
 	ctrl.recibo_info;
@@ -101,25 +138,32 @@ app.controller("mainController", function($scope, $http, $rootScope) {
 		ctrl.item = {};
 	}
 
-	ctrl.info_recibo = function(index) {
+	ctrl.imprimir_recibo = function(index) {
+		containerRecibo.selecionarRecibo(ctrl.recibos[index]);
+	}
+
+	ctrl.infoRecibo = function(index) {
+		var recibo = ctrl.recibos[index];
 		ctrl.recibo_info = '';
-		var itens = ctrl.recibos[index].itens;
 		
-		itens.forEach(function(item) {
-			ctrl.recibo_info += item.produto.nome + ": ";
+		var item_buffer;
+		recibo.itens.forEach(function(item) {
+			if(!item_buffer || item_buffer.produto.codigo != item.produto.codigo) {
+				item_buffer = {};
+				item_buffer.produto = item.produto;
+				item_buffer.quantidade = 0;
 
-			var filter = itens.filter(function(item_filter) {
-				return item.produto.codigo == item_filter.produto.codigo;
-			});
+				var filter_itens = recibo.itens.filter(function(itemFilter) {
+					return item_buffer.produto.codigo == itemFilter.produto.codigo;
+				});
 
-			var quantidade = 0;
-			filter.forEach(function(item) {
-				quantidade += Number.parseInt(item.quantidade);
-			});
+				filter_itens.forEach(function(item) {
+					item_buffer.quantidade += Number.parseInt(item.quantidade);
+				});
 
-			ctrl.recibo_info += Number.parseInt(quantidade) + "\n";
+				ctrl.recibo_info += item_buffer.produto.nome + ": " + item_buffer.quantidade + "\n";
+			}
 		});
-
 	}
 
 	function gerarNumero() {
