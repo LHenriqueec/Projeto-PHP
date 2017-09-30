@@ -54,14 +54,14 @@
 										<div class="form-group">
 											<label for="cidade" class="control-label col-md-2">Cidade</label>
 											<div class="col-md-12">
-												<input id="cidade" class="form-control" type="text" name="cidade" placeholder="Cidade do cliente" ng-model="cliente.cidade">
+												<input id="cidade" class="form-control" type="text" name="cidade" placeholder="Cidade do cliente" ng-model="cliente.endereco.cidade">
 											</div>
 										</div>
 
 										<div class="form-group">
 											<label for="bairro" class="control-label col-md-2">Bairro</label>
 											<div class="col-md-12">
-												<input id="bairro" class="form-control" type="text" name="bairro" placeholder="Bairro do cliente" ng-model="cliente.bairro">
+												<input id="bairro" class="form-control" type="text" name="bairro" placeholder="Bairro do cliente" ng-model="cliente.endereco.bairro">
 											</div>
 										</div>
 
@@ -135,8 +135,8 @@
 		<tr ng-repeat="cliente in clientes  | filter : nameFilter">
 			<td>{{cliente.cnpj | uppercase}}</td>
 			<td>{{cliente.nome | uppercase}}</td>
-			<td>{{cliente.bairro | uppercase}}</td>
-			<td>{{cliente.logradouro | uppercase}}</td>
+			<td>{{cliente.endereco.bairro | uppercase}}</td>
+			<td>{{cliente.endereco.logradouro | uppercase}}</td>
 			<td style="width:20%;text-align:center">
 				<button type="button" class="btn btn-info" ng-click="alterar(cliente)" data-toggle="modal" data-target="#cadastro-cliente">Alterar</button>
 				<button type="button" class="btn btn-danger" ng-click="remover(cliente)">Deletar</button>
